@@ -8,7 +8,7 @@ let options = CovstatsOptions.parseOrExit()
 requestor(target: "https://www.worldometers.info/coronavirus/") { answer in
 
   var result = htmlParser(htmlString: answer).sorted { $0.totalCases > $1.totalCases }
-  if !options.showWorld { result.removeFirst()}
+  if !options.showWorld { result.removeFirst() }
 
   let headers = [
     TextTableColumn(header: "Country"),
@@ -27,6 +27,10 @@ requestor(target: "https://www.worldometers.info/coronavirus/") { answer in
     // TextTableColumn(header: "Population"),
     // TextTableColumn(header: "Continent")
   ]
+
+  if options.continent != Continents.ALL.rawValue {
+    result = result.filter { $0.continent == options.continent }
+  }
 
   var table = TextTable(columns: headers)
   table.header = "Source: www.worldometers.info as of \(Date())"
