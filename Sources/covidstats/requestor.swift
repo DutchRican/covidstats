@@ -1,11 +1,8 @@
 import Foundation
 
-func requestor(target: String, completionHandler: @escaping (String) -> Void) {
+func requestor(target: String) async throws -> String {
     guard let url = URL(string: target) else { fatalError("invalid URL!")}
-    let task = URLSession.shared.dataTask(with: url) {(data, response, error) in 
-        guard let data =  data else {fatalError("No data received")}
-        completionHandler(String(data: data, encoding: .utf8)!)
-    }
-    task.resume()
-    
+     let urlRequest = URLRequest(url:url)
+     let (data, _) = try await URLSession.shared.data(for: urlRequest)
+    return String(data: data, encoding: .utf8)!;
 }
